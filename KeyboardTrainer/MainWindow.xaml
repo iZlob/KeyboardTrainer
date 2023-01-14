@@ -1,0 +1,407 @@
+﻿<Window x:Class="KeyboardTrainer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KeyboardTrainer"
+        mc:Ignorable="d" Loaded="LoadForm" PreviewKeyUp="KeyAbsolve"
+        Title="MainWindow" Height="450" Width="820" PreviewKeyDown="KeyPress"
+        MinHeight="450" MinWidth="820">
+    
+    <!--разбиваем окно на строки (на ряды)-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!--строку 0 разбиваем на 4 колонки-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--в первую добавляем инфо о скорости набора-->
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <TextBlock Text="Speed: "/>
+                <TextBlock Text="0" FontWeight="Bold" x:Name="speed"/>
+                <TextBlock Text=" chars/min"/>
+            </StackPanel>
+            <!--во вторую кол-во ошибок-->
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Text="Fails: "/>
+                <TextBlock Text="0" FontWeight="Bold" x:Name="fails"/>
+            </StackPanel>
+            <!--в третью выбор уровня с помощью ползунка (slider)-->
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Name="diff">
+                    <TextBlock Text="Difficulty: "/>
+                    <TextBlock Text="1" FontWeight="Bold" x:Name="difficult"/>
+                </StackPanel>
+                <Slider Grid.Column="1" HorizontalAlignment="Right"
+                    Maximum="5" Minimum="1" Value="1"
+                    TickPlacement="BottomRight" TickFrequency="1"
+                    Margin="0,0,10,0" x:Name="slider" IsSnapToTickEnabled="True"
+                    Width="{Binding ElementName=diff,Path=ActualWidth}"
+                        ValueChanged="ValueSliderChanged"/>
+            </Grid>
+            <!--в четвертую учет регистра-->
+            <CheckBox Grid.Column="3" Content="Case Sensitive" x:Name="registr"/>
+        </Grid>
+        <!--во вторую строку окна добавляем кнопки старт и стоп-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="2" Content="Start" Click="ClickStart"
+                    Margin="2" x:Name="start"/>
+            <Button Grid.Column="3" Content="Stop" Click="ClickStop"
+                    Margin="2" Opacity="0.5" x:Name="stop"/>
+        </Grid>
+        <!--в третью строку окна добавляем текстовый блок в котором будет 
+        отображаться тренировочный текст-->
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" FontSize="16" TextWrapping="Wrap" Background="LightBlue" 
+                       x:Name="text" AcceptsReturn="True"/>
+            <TextBlock Grid.Row="1" FontSize="16" TextWrapping="Wrap" Background="LightGreen"
+                       x:Name="textW"/>
+        </Grid>
+        
+        <!--Далее добавляем кнопки клавиатуры-->
+        <!--ряд 1-->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyApostrof">
+                <TextBlock Text="`" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyApostrof"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD1">
+                <TextBlock Text="1" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD1"/>                
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD2">
+                <TextBlock Text="2" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD2"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD3">
+                <TextBlock Text="3" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD3"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD4">
+                <TextBlock Text="4" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD4"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD5">
+                <TextBlock Text="5" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD5"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD6">
+                <TextBlock Text="6" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD6"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD7">
+                <TextBlock Text="7" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD7"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD8">
+                <TextBlock Text="8" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD8"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD9">
+                <TextBlock Text="9" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD9"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD0">
+                <TextBlock Text="0" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD0"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyMinus">
+                <TextBlock Text="-" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyMinus"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyPlus">
+                <TextBlock Text="=" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyPlus"/>
+            </Border>
+            <Border Height="50" Width="100" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyBack">
+                <TextBlock Text="BackSpace" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+
+        </StackPanel>
+        <!--ряд 2-->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border Height="50" Width="75" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyTab">
+                <TextBlock Text="Tab" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyQ">
+                <TextBlock Text="q" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyQ"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyW">
+                <TextBlock Text="w" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyW"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyE">
+                <TextBlock Text="e" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyE"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyR">
+                <TextBlock Text="r" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyR"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyT">
+                <TextBlock Text="t" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyT"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyY">
+                <TextBlock Text="y" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyY"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyU">
+                <TextBlock Text="u" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyU"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyI">
+                <TextBlock Text="i" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyI"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyO">
+                <TextBlock Text="o" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyO"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyP">
+                <TextBlock Text="p" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyP"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyLSkobka">
+                <TextBlock Text="[" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyLSkobka"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRSkobka">
+                <TextBlock Text="]" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyRSkobka"/>
+            </Border>
+            <Border Height="50" Width="75" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keySlesh">
+                <TextBlock Text="\" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeySlesh"/>
+            </Border>
+        </StackPanel>
+        <!--ряд 3-->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border Height="50" Width="102" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyCaps">
+                <TextBlock Text="Caps Lock" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyA">
+                <TextBlock Text="a" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyA"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyS">
+                <TextBlock Text="s" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyS"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyD">
+                <TextBlock Text="d" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyD"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyF">
+                <TextBlock Text="f" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyF"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyG">
+                <TextBlock Text="g" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyG"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyH">
+                <TextBlock Text="h" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyH"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyJ">
+                <TextBlock Text="j" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyJ"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyK">
+                <TextBlock Text="k" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyK"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyL">
+                <TextBlock Text="l" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyL"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyTochZap">
+                <TextBlock Text=";" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyTochZap"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyKavichki">
+                <TextBlock Text="'" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyKavichki"/>
+            </Border>
+            <Border Height="50" Width="102" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyEnter">
+                <TextBlock Text="Enter" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>            
+        </StackPanel>
+        <!--ряд 4-->
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border Height="50" Width="129" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyLShift">
+                <TextBlock Text="Shift" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyZ">
+                <TextBlock Text="z" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyZ"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyX">
+                <TextBlock Text="x" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyX"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyC">
+                <TextBlock Text="c" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyC"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyV">
+                <TextBlock Text="v" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyV"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightSkyBlue" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyB">
+                <TextBlock Text="b" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyB"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyN">
+                <TextBlock Text="n" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyN"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Magenta" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyM">
+                <TextBlock Text="m" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyM"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightCoral" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyZapataya">
+                <TextBlock Text="," FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyZapataya"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="Yellow" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyTochka">
+                <TextBlock Text="." FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyTochka"/>
+            </Border>
+            <Border Height="50" Width="50" Margin="2" Background="LightGreen" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRazdelit">
+                <TextBlock Text="/" FontSize="34" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeyRazdelit"/>
+            </Border>
+            <Border Height="50" Width="129" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRShift">
+                <TextBlock Text="Shift" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+        </StackPanel>
+        <!--ряд 5-->
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border Height="50" Width="77" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyLCtrl">
+                <TextBlock Text="Ctrl" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="76" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyLWin">
+                <TextBlock Text="Win" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="76" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyLAlt">
+                <TextBlock Text="Alt" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="320" Margin="2" Background="LightCoral"
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keySpace">
+                <TextBlock Text="Space" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" x:Name="TkeySpace"/>
+            </Border>
+            <Border Height="50" Width="76" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRAlt">
+                <TextBlock Text="Alt" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="76" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRWin">
+                <TextBlock Text="Win" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+            <Border Height="50" Width="77" Margin="2" Background="Silver" 
+                    BorderBrush="Black" BorderThickness="2" CornerRadius="10" x:Name="keyRCtrl">
+                <TextBlock Text="Ctrl" FontSize="16" HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+            </Border>
+        </StackPanel>
+
+    </Grid>
+</Window>
